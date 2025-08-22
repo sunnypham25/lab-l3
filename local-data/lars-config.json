@@ -1,0 +1,17 @@
+{
+  "projectKeys": {
+    "mainnet": {
+      "arcApiKey": "mainnet_55f4e7670d7a2c54722a526edddd0326",
+      "serverPrivateKey": "bbd800281cde239d3035d00b4b7933a2c61a876db6e7d3481a0d2238b3242996"
+    },
+    "testnet": {}
+  },
+  "enableRequestLogging": true,
+  "enableGASPSync": false,
+  "overlayAdvancedConfig": {
+    "syncConfiguration": {},
+    "logTime": false,
+    "logPrefix": "[LARS OVERLAY ENGINE] ",
+    "throwOnBroadcastFailure": false
+  }
+}
