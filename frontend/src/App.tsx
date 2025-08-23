@@ -49,12 +49,16 @@ export default function App() {
     }
   }
 
-  const handleListMessages = async () => {
+ const handleListMessages = async () => {
     try {
-      // TODO: Implement the logic to list messages with the following requirements:
-      // - Call the listMessages function to retrieve messages
-      // - Update the messages state with the retrieved messages
-      // - If an error occurs, catch it, log it to the console with the prefix "List messages error:", and show an alert with the message "Failed to list messages."
+      try {
+        const msgs = await listMessages()
+        setMessages(msgs as PeerMessage[])
+      } catch (err: unknown) {
+        const e = err instanceof Error ? err : new Error(String(err))
+        console.error('List messages error:', e)
+        alert('Failed to list messages.')
+      }
     } catch (error) {
       console.error('Unexpected error in handleListMessages:', error)
     }
@@ -62,16 +66,25 @@ export default function App() {
 
   const handleAcknowledge = async () => {
     try {
-      // TODO: Implement the logic to acknowledge messages with the following requirements:
-      // - Validate that selectedMessageIds is not empty; if empty, show an alert with the message "Please select messages to acknowledge." and return early
-      // - Call the acknowledgeMessages function with selectedMessageIds as the argument
-      // - If successful, show an alert with the message "Messages acknowledged!"
-      // - Refresh the inbox by calling handleListMessages
-      // - If an error occurs, catch it, log it to the console with the prefix "Acknowledge error:", and show an alert with the message "Failed to acknowledge messages."
+      if (selectedMessageIds.length === 0) {
+        alert('Please select messages to acknowledge.')
+        return
+      }
+      try {
+        await acknowledgeMessages(selectedMessageIds)
+        alert('Messages acknowledged!')
+        setSelectedMessageIds([])
+        await handleListMessages()
+      } catch (err: unknown) {
+        const e = err instanceof Error ? err : new Error(String(err))
+        console.error('Acknowledge error:', e)
+        alert('Failed to acknowledge messages.')
+      }
     } catch (error) {
       console.error('Unexpected error in handleAcknowledge:', error)
     }
   }
+
 
   const toggleSelectMessage = (messageId: string) => {
     setSelectedMessageIds(prev =>
@@ -80,7 +93,9 @@ export default function App() {
         : [...prev, messageId]
     )
   }
-
+  if (identityKey === null) {
+    return <p>Fetching identity key...</p>
+  }
   return (
     // TODO: Add a loading indicator while the identity key is being fetched:
     // - If identityKey is null, render a <p> element with the text "Fetching identity key..."
@@ -93,7 +108,7 @@ export default function App() {
         <br />
         {identityKey ?? 'Loading...'}
       </p>
-
+    
       <div style={{ marginBottom: '1rem' }}>
         <label>Recipient Identity Key:</label>
         <br />

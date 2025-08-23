@@ -63,7 +63,15 @@ export async function sendMessage(recipient: string, body: string) {
     // - Set the recipient to the provided recipient parameter
     // - Use 'L3_inbox' as the messageBox
     // - Set the body to the provided body parameter
-    await /* Replace with message sending logic */
+    await client.sendMessage (
+      {
+        recipient: recipient,
+        messageBox: 'L3_inbox',
+        body: body
+      }
+  
+    )
+    /* Replace with message sending logic */
     console.log('[sendMessage] Message sent successfully.')
   } catch (error) {
     console.error('[sendMessage] Failed to send message:', error)
